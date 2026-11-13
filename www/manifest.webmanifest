@@ -1,0 +1,19 @@
+{
+  "name": "Mật Mã – Mã hoá & giải mã mật thư",
+  "short_name": "Mật Mã",
+  "description": "Mã hoá và giải mã mật thư: điện thoại, Morse, Caesar, chuồng bò, chữ nổi, semaphore… Hỗ trợ tiếng Việt có dấu, chạy offline.",
+  "lang": "vi",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f4fa",
+  "theme_color": "#4338ca",
+  "categories": ["education", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

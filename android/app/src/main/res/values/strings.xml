@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mật Mã</string>
+    <string name="title_activity_main">Mật Mã</string>
+    <string name="package_name">vn.matma.app</string>
+    <string name="custom_url_scheme">vn.matma.app</string>
+
+    <!-- Bong bóng nổi -->
+    <string name="bubble_channel">Bong bóng nổi</string>
+    <string name="bubble_notification_title">Bong bóng Mật Mã đang bật</string>
+    <string name="bubble_notification_text">Chạm vào bong bóng để mã hoá, giải mã</string>
+    <string name="bubble_stop">Tắt</string>
+    <string name="bubble_open">Mở Mật Mã</string>
+
+    <!-- Mục trong menu khi bôi đen chữ ở app khác -->
+    <string name="process_text_label">Mật Mã</string>
+</resources>

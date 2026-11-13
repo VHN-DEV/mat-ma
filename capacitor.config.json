@@ -1,0 +1,12 @@
+{
+  "appId": "vn.matma.app",
+  "appName": "Mật Mã",
+  "webDir": "www",
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "initialViewportFitValueHint": "cover",
+      "style": "DARK"
+    }
+  }
+}
