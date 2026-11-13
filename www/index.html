@@ -1,21 +1,22 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#4f46e5">
+<meta name="theme-color" content="#ffffff">
 <meta name="description" content="Mã hoá và giải mã mật thư: điện thoại, Morse, Caesar, chuồng bò, chữ nổi, semaphore… Hỗ trợ tiếng Việt có dấu, chạy offline.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mật Mã">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<!-- Đặt sáng/tối trước khi vẽ trang để không bị nháy; mặc định sáng (js/ui/theme.js) -->
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'; } catch {}</script>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/app.css">
 <script type="module" src="js/main.js"></script>
-<title>Mật Mã</title>
+<title>Mật Mã – Mã hoá &amp; giải mã mật thư</title>
 </head>
 <body>
 <!-- Bộ icon dùng chung: <svg class="icon"><use href="#i-..."/></svg> -->
@@ -24,114 +25,127 @@
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
   <symbol id="i-paste" viewBox="0 0 24 24"><rect x="8" y="2.5" width="8" height="4" rx="1.2"/><path d="M16 4.5h1.5a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2H8"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
-  <symbol id="i-clear" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4.5A1.5 1.5 0 0 1 9.5 3h5A1.5 1.5 0 0 1 16 4.5V6M6 6l1 14a1.5 1.5 0 0 0 1.5 1.4h7A1.5 1.5 0 0 0 17 20l1-14"/></symbol>
+  <symbol id="i-clear" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
   <symbol id="i-backspace" viewBox="0 0 24 24"><path d="M21 5H8l-6 7 6 7h13z"/><path d="m12 9 6 6M18 9l-6 6"/></symbol>
   <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></symbol>
   <symbol id="i-bubble" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 20.5l1.4-5A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
 </svg>
 
-<!-- Chế độ nhúng (app Android): bong bóng nổi / menu bôi đen chữ, xem js/platform/ -->
-<div class="embed-bar" data-modes="bubble process">
-  <img src="icons/icon-192.png" alt="" width="28" height="28">
-  <strong>Mật Mã</strong>
-  <button type="button" class="icon-btn" id="embed-min" data-modes="bubble" aria-label="Thu nhỏ" title="Thu nhỏ"><svg class="icon"><use href="#i-minimize"/></svg></button>
-  <button type="button" class="icon-btn" data-embed="close" data-modes="bubble" aria-label="Tắt bong bóng" title="Tắt bong bóng"><svg class="icon"><use href="#i-power"/></svg></button>
-  <button type="button" class="icon-btn" data-embed="close" data-modes="process" aria-label="Đóng" title="Đóng"><svg class="icon"><use href="#i-close"/></svg></button>
-</div>
-
-<header class="hero" data-modes="web android">
-  <div class="hero-inner">
-    <img src="icons/icon-192.png" alt="" width="52" height="52">
-    <div>
-      <h1>Mật Mã</h1>
-      <p>Mã hoá &amp; giải mã mật thư</p>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img src="icons/icon-192.png" alt="" width="32" height="32">
+      <span><strong>Mật Mã</strong><small>Mã hoá &amp; giải mã mật thư</small></span>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="icon-btn" id="theme-toggle" data-modes="web android" aria-label="Chuyển giao diện tối" title="Sáng / tối"><svg class="icon"><use href="#i-moon"/></svg></button>
+      <!-- Chế độ nhúng (app Android): bong bóng nổi / menu bôi đen chữ, xem js/platform/ -->
+      <button type="button" class="icon-btn" id="embed-min" data-modes="bubble" aria-label="Thu nhỏ" title="Thu nhỏ"><svg class="icon"><use href="#i-minimize"/></svg></button>
+      <button type="button" class="icon-btn" data-embed="close" data-modes="bubble" aria-label="Tắt bong bóng" title="Tắt bong bóng"><svg class="icon"><use href="#i-power"/></svg></button>
+      <button type="button" class="icon-btn" data-embed="close" data-modes="process" aria-label="Đóng" title="Đóng"><svg class="icon"><use href="#i-close"/></svg></button>
     </div>
   </div>
-  <div class="morse" aria-hidden="true">-- .- - / -- .-</div>
 </header>
 
 <main>
-  <section class="card feature" data-modes="android">
+  <section class="banner" data-modes="android">
+    <svg class="icon"><use href="#i-bubble"/></svg>
     <div class="text">
-      <h2><svg class="icon"><use href="#i-bubble"/></svg>Dùng ngay khi đang chat Zalo, Messenger</h2>
-      <p>Bật bong bóng nổi để mã hoá, giải mã mà không phải rời khung chat. Hoặc bôi đen chữ trong ô chat rồi chọn <b>Mật Mã</b> trên menu.</p>
+      <strong>Dùng ngay khi đang chat Zalo, Messenger</strong>
+      <p>Bật bong bóng nổi, hoặc bôi đen chữ trong ô chat rồi chọn <b>Mật Mã</b> trên menu.</p>
     </div>
     <button type="button" class="btn primary" id="bubble-start">Bật bong bóng</button>
   </section>
 
-  <section class="card setup" aria-labelledby="setup-label">
-    <div class="label" id="setup-label">Bộ mật mã
-      <button type="button" class="info" aria-label="Giải thích: bộ mật mã" data-tip="Chọn quy tắc dùng để mã hoá. Người nhận phải dùng đúng bộ mã này (và đúng khóa, nếu có) mới giải được."><svg class="icon"><use href="#i-info"/></svg></button>
-    </div>
-    <button type="button" class="picker-trigger" id="pick-open" aria-haspopup="dialog">
-      <span class="text"><span class="group" id="cur-group"></span><span class="name" id="cur-name"></span></span>
-      <span class="change">Đổi <svg class="icon"><use href="#i-chevron"/></svg></span>
-    </button>
-    <p id="summary" class="summary"></p>
-    <div id="params" class="params"></div>
-    <div class="example" data-modes="web android"><span>Ví dụ: <b>Việt Nam</b> →</span> <code id="example"></code></div>
-    <a class="link" href="#guide" data-modes="web android">Xem giới thiệu &amp; quy tắc chi tiết ↓</a>
-  </section>
-
-  <section class="card io">
-    <div class="card-head">
-      <div class="label"><label for="msg">Tin nhắn</label>
-        <button type="button" class="info" aria-label="Giải thích: tin nhắn" data-tip="Gõ tin nhắn bình thường, có dấu tiếng Việt cũng được. Mật mã được tạo ngay khi bạn gõ."><svg class="icon"><use href="#i-info"/></svg></button>
+  <section class="translator" aria-label="Mã hoá và giải mã">
+    <div class="tr-bar">
+      <div class="tr-side">
+        <span class="chip">Văn bản</span>
+        <button type="button" class="info" aria-label="Giải thích: văn bản" data-tip="Gõ tin nhắn bình thường, có dấu tiếng Việt cũng được. Mật mã được tạo ngay khi bạn gõ."><svg class="icon"><use href="#i-info"/></svg></button>
       </div>
-      <span class="actions">
-        <button type="button" class="icon-btn" data-copy="msg" aria-label="Sao chép tin nhắn" title="Sao chép"><svg class="icon"><use href="#i-copy"/></svg></button>
-        <button type="button" class="icon-btn" id="clear" aria-label="Xoá tất cả" title="Xoá tất cả"><svg class="icon"><use href="#i-clear"/></svg></button>
-      </span>
-    </div>
-    <textarea id="msg" rows="4" placeholder="Nhập tin nhắn, ví dụ: Hẹn gặp ở cổng trường lúc 7 giờ" spellcheck="false"></textarea>
-  </section>
-
-  <div class="flow" id="flow" aria-live="polite" data-modes="web android"><svg class="icon"><use href="#i-arrow"/></svg><span id="flow-label">Đang mã hoá</span></div>
-
-  <section class="card phone io">
-    <div class="card-head">
-      <div class="label"><label for="code" id="code-label">Mật mã</label>
-        <button type="button" class="info" aria-label="Giải thích: mật mã" data-tip="Dán hoặc gõ mật mã nhận được để giải ngược thành tin nhắn. Bàn phím bên dưới giúp gõ nhanh các ký hiệu của bộ mã này."><svg class="icon"><use href="#i-info"/></svg></button>
+      <div class="tr-dir" id="flow" title="Đang mã hoá">
+        <svg class="icon"><use href="#i-arrow"/></svg>
+        <span class="sr-only" id="flow-label" aria-live="polite">Đang mã hoá</span>
       </div>
-      <span class="actions" data-text-code>
-        <button type="button" class="icon-btn" id="paste" aria-label="Dán mật mã" title="Dán"><svg class="icon"><use href="#i-paste"/></svg></button>
-        <button type="button" class="icon-btn" id="share" aria-label="Chia sẻ mật mã" title="Chia sẻ" hidden><svg class="icon"><use href="#i-share"/></svg></button>
-        <button type="button" class="icon-btn" data-copy="code" aria-label="Sao chép mật mã" title="Sao chép"><svg class="icon"><use href="#i-copy"/></svg></button>
-      </span>
-    </div>
-    <div class="lcd">
-      <div class="lcd-status" aria-hidden="true">
-        <span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span>
-        <span id="lcd-name"></span>
-        <span id="lcd-count"></span>
+      <div class="tr-side">
+        <button type="button" class="chip" id="pick-open" aria-haspopup="dialog" aria-label="Chọn bộ mật mã">
+          <span class="text" id="cur-name"></span><svg class="icon"><use href="#i-chevron"/></svg>
+        </button>
+        <button type="button" class="info" aria-label="Giải thích: bộ mật mã" data-tip="Chọn quy tắc dùng để mã hoá. Người nhận phải dùng đúng bộ mã này (và đúng khóa, nếu có) mới giải được."><svg class="icon"><use href="#i-info"/></svg></button>
       </div>
-      <textarea id="code" rows="4" placeholder="Hoặc nhập mật mã vào đây để giải…" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
-      <div id="glyphs" class="glyphs" role="img" aria-labelledby="code-label" hidden></div>
     </div>
-    <p id="error" class="error" role="alert"></p>
+
+    <div class="tr-info">
+      <p class="summary"><span id="summary"></span> <a href="#guide" data-modes="web android">Xem quy tắc</a></p>
+      <div id="params" class="params"></div>
+    </div>
+
+    <div class="tr-panes">
+      <div class="pane">
+        <textarea id="msg" aria-label="Tin nhắn" placeholder="Nhập tin nhắn…" spellcheck="false"></textarea>
+        <div class="pane-foot">
+          <span class="count" id="msg-count"></span>
+          <span class="actions">
+            <button type="button" class="icon-btn" data-copy="msg" aria-label="Sao chép tin nhắn" title="Sao chép"><svg class="icon"><use href="#i-copy"/></svg></button>
+            <button type="button" class="icon-btn" id="clear" aria-label="Xoá tất cả" title="Xoá tất cả"><svg class="icon"><use href="#i-clear"/></svg></button>
+          </span>
+        </div>
+      </div>
+      <div class="pane out">
+        <textarea id="code" aria-label="Mật mã" placeholder="Hoặc dán mật mã vào đây để giải" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <div id="glyphs" class="glyphs" role="img" aria-label="Mật mã dạng hình" hidden></div>
+        <div class="pane-foot">
+          <span class="count" id="code-count"></span>
+          <p id="error" class="error" role="alert"></p>
+          <button type="button" class="info" aria-label="Giải thích: mật mã" data-tip="Dán hoặc gõ mật mã nhận được vào ô này để giải ngược thành tin nhắn. Bàn phím bên dưới giúp gõ nhanh các ký hiệu của bộ mã."><svg class="icon"><use href="#i-info"/></svg></button>
+          <span class="actions" data-text-code>
+            <button type="button" class="icon-btn" id="paste" aria-label="Dán mật mã" title="Dán"><svg class="icon"><use href="#i-paste"/></svg></button>
+            <button type="button" class="icon-btn" id="share" aria-label="Chia sẻ mật mã" title="Chia sẻ" hidden><svg class="icon"><use href="#i-share"/></svg></button>
+            <button type="button" class="icon-btn" data-copy="code" aria-label="Sao chép mật mã" title="Sao chép"><svg class="icon"><use href="#i-copy"/></svg></button>
+          </span>
+        </div>
+      </div>
+    </div>
+
     <div id="pad" class="pad"></div>
   </section>
 
-  <section class="card guide" id="guide" aria-labelledby="guide-title" data-modes="web android">
+  <section class="guide" id="guide" aria-labelledby="guide-title" data-modes="web android">
     <p class="eyebrow">Giới thiệu &amp; quy tắc</p>
     <h2 id="guide-title"></h2>
-    <div id="guide-body"></div>
-    <details id="chart" class="more">
-      <summary>Bảng tra</summary>
-      <div id="chart-body" class="chart"></div>
-    </details>
-    <details id="telex" class="more">
-      <summary>Chữ có dấu được giữ bằng Telex như thế nào?</summary>
-      <p>Bộ mã này chỉ có 26 chữ cái, nên trước khi mã hoá, tin nhắn được đổi sang kiểu gõ Telex (dấu thanh đặt cuối từ); khi giải mã, app tự đổi ngược lại thành chữ có dấu. Ví dụ: "Người Việt" → nguwowif vieetj.</p>
-      <p class="chart"><span><b>â</b>aa</span><span><b>ă</b>aw</span><span><b>ê</b>ee</span><span><b>ô</b>oo</span><span><b>ơ</b>ow</span><span><b>ư</b>uw</span><span><b>đ</b>dd</span>
-        <span><b>sắc</b>s</span><span><b>huyền</b>f</span><span><b>hỏi</b>r</span><span><b>ngã</b>x</span><span><b>nặng</b>j</span></p>
-    </details>
+    <div class="guide-grid">
+      <div id="guide-body"></div>
+      <aside class="side">
+        <div class="example-box">
+          <span class="label">Ví dụ</span>
+          <p><b>Việt Nam</b> →</p>
+          <code id="example"></code>
+        </div>
+        <details id="chart" class="more">
+          <summary>Bảng tra</summary>
+          <div id="chart-body" class="chart"></div>
+        </details>
+        <details id="telex" class="more">
+          <summary>Chữ có dấu được giữ bằng Telex như thế nào?</summary>
+          <p>Bộ mã này chỉ có 26 chữ cái, nên trước khi mã hoá, tin nhắn được đổi sang kiểu gõ Telex (dấu thanh đặt cuối từ); khi giải mã, app tự đổi ngược lại thành chữ có dấu. Ví dụ: "Người Việt" → nguwowif vieetj.</p>
+          <p class="chart"><span><b>â</b>aa</span><span><b>ă</b>aw</span><span><b>ê</b>ee</span><span><b>ô</b>oo</span><span><b>ơ</b>ow</span><span><b>ư</b>uw</span><span><b>đ</b>dd</span>
+            <span><b>sắc</b>s</span><span><b>huyền</b>f</span><span><b>hỏi</b>r</span><span><b>ngã</b>x</span><span><b>nặng</b>j</span></p>
+        </details>
+      </aside>
+    </div>
   </section>
 </main>
+
+<footer class="footer" data-modes="web android">
+  <span class="morse" aria-hidden="true">-- .- - / -- .-</span>
+  <span>Mật Mã · 17 bộ mã · chạy cả khi không có mạng</span>
+</footer>
 
 <div class="embed-actions" data-modes="bubble process">
   <button type="button" class="btn" id="act-paste-decode" data-modes="bubble"><svg class="icon"><use href="#i-paste"/></svg>Dán &amp; giải mã</button>

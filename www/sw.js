@@ -29,6 +29,7 @@ const FILES = [
   'js/ui/feedback.js',
   'js/ui/picker.js',
   'js/ui/render.js',
+  'js/ui/theme.js',
   'js/ui/tooltip.js',
   'js/platform/native.js',
   'js/platform/embed.js',

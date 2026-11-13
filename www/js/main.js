@@ -6,16 +6,17 @@ import { $, escapeHTML } from './ui/dom.js';
 import { copyText, toast } from './ui/feedback.js';
 import { createPicker } from './ui/picker.js';
 import { glyphHTML, renderChart, renderGuide, renderPad, renderParams } from './ui/render.js';
+import { initTheme } from './ui/theme.js';
 import { initTooltips } from './ui/tooltip.js';
 
 const STORAGE_KEY = 'cipher';
 const EXAMPLE = 'Việt Nam';
 
 const ui = {
-  curGroup: $('cur-group'), curName: $('cur-name'), summary: $('summary'), params: $('params'), example: $('example'),
+  curName: $('cur-name'), summary: $('summary'), params: $('params'), example: $('example'),
   guideTitle: $('guide-title'), guide: $('guide-body'), telex: $('telex'), chart: $('chart'), chartBody: $('chart-body'),
   msg: $('msg'), code: $('code'), glyphs: $('glyphs'), error: $('error'), pad: $('pad'),
-  flow: $('flow'), flowLabel: $('flow-label'), lcdName: $('lcd-name'), lcdCount: $('lcd-count'),
+  flow: $('flow'), flowLabel: $('flow-label'), msgCount: $('msg-count'), codeCount: $('code-count'),
   paste: $('paste'), share: $('share'),
 };
 
@@ -27,16 +28,21 @@ const state = {
 };
 
 // ---------- Mã hoá / giải mã ----------
+const countLabel = text => `${[...text].length} ký tự`;
+
 function showDirection() {
   const decoding = state.lastEdited === 'code';
+  const label = decoding ? 'Đang giải mã' : 'Đang mã hoá';
   ui.flow.classList.toggle('decoding', decoding);
-  ui.flowLabel.textContent = decoding ? 'Đang giải mã' : 'Đang mã hoá';
+  ui.flow.title = label;
+  ui.flowLabel.textContent = label;
 }
 
 function showCode() {
   const { draw } = state.cipher;
   if (draw) ui.glyphs.innerHTML = glyphHTML(ui.code.value, draw);
-  ui.lcdCount.textContent = `${[...ui.code.value].length} ký tự`;
+  ui.msgCount.textContent = countLabel(ui.msg.value);
+  ui.codeCount.textContent = countLabel(ui.code.value);
   showDirection();
 }
 
@@ -75,9 +81,9 @@ function selectCipher(id) {
   const keepDirection = !cipher.draw && !state.cipher.draw;
   Object.assign(state, { cipher, params: defaultParams(cipher), lastEdited: keepDirection ? state.lastEdited : 'msg' });
 
-  ui.curGroup.textContent = cipher.group;
-  ui.curName.textContent = cipher.name;
-  ui.lcdName.textContent = cipher.name.toUpperCase();
+  // "Điện thoại (bấm phím)": phần trong ngoặc ẩn trên màn hình hẹp để nút chọn không bị tràn
+  const [shortName, extra = ''] = cipher.name.split(/(?= \()/);
+  ui.curName.innerHTML = `${escapeHTML(shortName)}<span class="name-extra">${escapeHTML(extra)}</span>`;
   ui.summary.textContent = cipher.summary;
   ui.guideTitle.textContent = cipher.name;
   renderGuide(ui.guide, cipher);
@@ -138,6 +144,7 @@ ui.share.onclick = () => navigator.share({ text: ui.code.value }).catch(() => { 
 
 // ---------- Khởi động ----------
 applyMode();
+initTheme($('theme-toggle'));
 initTooltips();
 let saved = null;
 try { saved = localStorage.getItem(STORAGE_KEY); } catch { /* chế độ riêng tư: bỏ qua */ }

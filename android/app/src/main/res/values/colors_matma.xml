@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Trùng với màu nền (biến bg) trong www/css/app.css -->
-    <color name="sheet_background">#F4F2FB</color>
+    <!-- Nền bảng bong bóng / menu bôi đen chữ: trùng màu nền sáng (biến bg) trong www/css/app.css.
+         Giao diện web mặc định sáng nên nền luôn sáng để không bị nháy tối khi mở. -->
+    <color name="sheet_background">#F6F7F9</color>
 </resources>

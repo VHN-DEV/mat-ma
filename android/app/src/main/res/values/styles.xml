@@ -18,7 +18,7 @@
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
-        <item name="windowSplashScreenBackground">#4F46E5</item>
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
     </style>
 
     <!-- Bảng nổi từ dưới lên khi chọn "Mật Mã" trong menu bôi đen chữ -->

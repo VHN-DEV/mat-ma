@@ -21,3 +21,8 @@ export const EMBEDDED = MODE === 'bubble' || MODE === 'process';
 
 /** Bật bong bóng nổi (BubblePlugin.java); trả về { started: boolean } */
 export const startBubble = () => capacitor.nativePromise('Bubble', 'start', {});
+
+/** App Android: chữ/icon thanh trạng thái sáng (nền tối) hoặc tối (nền sáng), theo giao diện của app */
+export const setSystemBarsDark = dark => {
+  if (MODE === 'android') capacitor.nativePromise('SystemBars', 'setStyle', { style: dark ? 'DARK' : 'LIGHT' }).catch(() => {});
+};

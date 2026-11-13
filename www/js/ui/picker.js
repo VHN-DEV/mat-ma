@@ -1,9 +1,9 @@
-// Hộp chọn bộ mật mã dạng thẻ, gom theo nhóm; mỗi thẻ có tóm tắt và ví dụ mã hoá "nam" để xem trước.
+// Hộp chọn bộ mật mã dạng thẻ, gom theo nhóm; mỗi thẻ có tóm tắt và ví dụ mã hoá để xem trước.
 import { defaultParams } from '../ciphers/index.js';
 import { escapeHTML } from './dom.js';
 import { glyphHTML } from './render.js';
 
-const SAMPLE = 'nam';
+const SAMPLE = 'mật thư'; // đủ dài để bộ hoán vị (hàng rào, đọc ngược) cũng thấy khác đi
 
 function card(cipher) {
   const code = cipher.encode(SAMPLE, defaultParams(cipher));

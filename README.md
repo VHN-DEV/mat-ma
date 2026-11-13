@@ -34,7 +34,7 @@ www/                      Toàn bộ app web (Capacitor đóng gói thư mục n
     │   ├── shared/       Dữ liệu dùng chung giữa vài bộ (bàn phím điện thoại)
     │   └── phone.js, morse.js, …
     ├── ui/               Giao diện: render.js (vẽ), picker.js (hộp chọn), tooltip.js (nút i),
-    │                     feedback.js (sao chép, thông báo), dom.js
+    │                     theme.js (sáng/tối), feedback.js (sao chép, thông báo), dom.js
     └── platform/         Tích hợp app Android: native.js (nhận biết chế độ chạy), embed.js (nút riêng
                           của bong bóng nổi / menu bôi đen chữ). Phần tử có data-modes chỉ hiện ở chế độ đó
 test/                     Test tự động (node:test)

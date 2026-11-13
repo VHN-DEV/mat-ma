@@ -4,15 +4,16 @@ import { infoButton } from './tooltip.js';
 
 const BACKSPACE_KEY = ['<svg class="icon"><use href="#i-backspace"/></svg>', null, 'xoá lùi'];
 
-/** Ô nhập khóa của bộ mật mã (kèm nút (i) nếu có help); gọi onInput(id, value) mỗi khi người dùng sửa */
+/** Ô nhập khóa của bộ mật mã, gọn trên một hàng: nhãn, ô nhập, nút (i) nếu có help; gọi onInput(id, value) khi sửa */
 export function renderParams(container, defs = [], onInput) {
   container.replaceChildren(...defs.map(p => {
-    const field = document.createElement('div');
-    field.innerHTML = `<div class="field-head"><label class="label" for="param-${p.id}">${escapeHTML(p.label)}</label>${p.help ? infoButton(p.help, p.label) : ''}</div>`;
+    const field = Object.assign(document.createElement('div'), { className: 'param' });
+    field.innerHTML = `<label for="param-${p.id}">${escapeHTML(p.label)}</label>`;
     const input = Object.assign(document.createElement('input'), { id: `param-${p.id}`, type: p.type, value: p.value, min: p.min ?? '', max: p.max ?? '' });
     if (p.type === 'number') input.inputMode = 'numeric';
     input.oninput = () => onInput(p.id, input.value);
     field.append(input);
+    if (p.help) field.insertAdjacentHTML('beforeend', infoButton(p.help, p.label));
     return field;
   }));
 }
