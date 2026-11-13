@@ -102,9 +102,12 @@ button { font: inherit; color: inherit; }
 /* ---------- Bố cục ---------- */
 main { position: relative; max-width: 760px; margin: -44px auto 0; padding: 0 16px 32px; display: grid; gap: 14px; }
 @media (min-width: 980px) {
-  main { max-width: 1100px; grid-template-columns: 1fr auto 1fr; align-items: start; column-gap: 12px; }
+  main { max-width: 1100px; grid-template-columns: 1fr auto 1fr; align-items: stretch; column-gap: 12px; }
   .hero-inner { max-width: 1100px; }
   .setup, .guide, .feature { grid-column: 1 / -1; }
+  /* Hai thẻ Tin nhắn | Mật mã cao bằng nhau; ô gõ (hoặc màn hình LCD) giãn ra lấp phần trống */
+  .io { display: flex; flex-direction: column; }
+  .io > textarea, .io > .lcd { flex: 1; }
 }
 
 .card { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
@@ -173,7 +176,7 @@ textarea { min-height: 128px; resize: vertical; font-size: 17px; word-break: bre
 .flow .icon { width: 18px; height: 18px; color: var(--brand); transition: transform .25s; }
 .flow.decoding .icon { transform: rotate(180deg); }
 @media (min-width: 980px) {
-  .flow { flex-direction: column; align-self: center; margin: 0; max-width: 64px; text-align: center; }
+  .flow { flex-direction: column; align-self: center; margin: 0; font-size: 12px; white-space: nowrap; }
   .flow .icon { transform: rotate(-90deg); }
   .flow.decoding .icon { transform: rotate(90deg); }
 }
@@ -181,7 +184,7 @@ textarea { min-height: 128px; resize: vertical; font-size: 17px; word-break: bre
 /* ---------- Điện thoại: màn hình LCD + bàn phím ---------- */
 .phone { background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%); }
 .lcd {
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
   border-radius: 16px; background: radial-gradient(130% 90% at 50% 0%, #26221a 0%, var(--lcd-bg) 70%);
   color: var(--lcd-ink); font-family: var(--mono);
   box-shadow: 0 0 0 5px var(--bezel), inset 0 2px 10px rgb(0 0 0 / .65);
@@ -195,11 +198,11 @@ textarea { min-height: 128px; resize: vertical; font-size: 17px; word-break: bre
 .lcd-status .bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 10px; }
 .lcd-status .bars i { width: 3px; background: currentColor; border-radius: 1px; }
 .lcd textarea {
-  min-height: 132px; border: 0; border-radius: 0; background: transparent; color: inherit; caret-color: var(--lcd-ink);
+  flex: 1; min-height: 132px; border: 0; border-radius: 0; background: transparent; color: inherit; caret-color: var(--lcd-ink);
   font: 500 18px/1.6 var(--mono); text-shadow: var(--lcd-glow); padding: 8px 14px 14px; letter-spacing: .02em;
 }
 .lcd textarea::placeholder { color: var(--lcd-dim); text-shadow: none; }
-.glyphs { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 132px; padding: 10px 14px 14px; filter: drop-shadow(var(--lcd-glow)); }
+.glyphs { flex: 1; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 132px; padding: 10px 14px 14px; filter: drop-shadow(var(--lcd-glow)); }
 .glyphs svg { width: 42px; height: 42px; }
 .glyphs .gap { width: 22px; }
 .glyphs .ch { font-size: 20px; line-height: 42px; }
